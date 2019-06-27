@@ -1,7 +1,7 @@
 class ShortUrl < ApplicationRecord
   # This character set contains no vowels so that no words will be generated, 
   # preventing the shortened url from being something like /fuck
-  SHORT_URL_CHARS = "0123456789bcdfghjklmnpqrstvwxzBCDFGHJKLMNPQRSTVWXZ".chars
+  SHORT_URL_CHARS = "0123456789bcdfghjklmnpqrstvwxzBCDFGHJKLMNPQRSTVWXZ".chars.shuffle(random: Random.new(37))
   CHECKSUM_LEN = 2
 
   def self.shorten(url_id)
