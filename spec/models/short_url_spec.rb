@@ -34,4 +34,11 @@ RSpec.describe ShortUrl do
   it "lengthens" do
     expect(ShortUrl.lengthen(ShortUrl.shorten(@source.id))).to eq(@source.url)
   end
+
+  it "returns false when attempting to lengthen an invalid short url" do
+    expect(ShortUrl.lengthen("1")).to eq(false) #too short
+    expect(ShortUrl.lengthen("novowelsallowed")).to eq(false) #invalid characters
+    expect(ShortUrl.lengthen("qwrt.jpg")).to eq(false) #invalid characters
+    expect(ShortUrl.lengthen("mnbv/lkj")).to eq(false) #invalid characters
+  end
 end

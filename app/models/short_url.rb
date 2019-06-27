@@ -23,12 +23,18 @@ class ShortUrl < ApplicationRecord
   end
 
   def self.lengthen(short_url)
+    return false unless self.validate(short_url)
+
     url_id = self.decode(short_url[0..(-CHECKSUM_LEN-1)])
     url = self.find_by(id: url_id)&.url
     
     return false unless url
 
     self.calc_simple_checksum(url) == short_url[-CHECKSUM_LEN..-1] ? url : false
+  end
+
+  def self.validate(short_url)
+    short_url.size >= 1 + CHECKSUM_LEN && !short_url.chars.detect { |c| !SHORT_URL_CHARS.include?(c) }
   end
 
   def self.decode(s)
