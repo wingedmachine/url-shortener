@@ -7,8 +7,6 @@ class ShortUrlsController < ApplicationController
 
   def redirect
     @url = ShortUrl.lengthen(params[:shortened_url])
-    render "new" unless @url
-
-    puts @url
+    @url ? (redirect_to @url) : (render "new")
   end
 end
