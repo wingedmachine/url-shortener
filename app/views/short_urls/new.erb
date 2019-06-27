@@ -1,1 +1,4 @@
-Welcome to root!
+<%= form_for @short_url do |f| %>
+  <%= f.text_field :url %>
+  <%= f.submit "Shrink it!" %>
+<% end %>
