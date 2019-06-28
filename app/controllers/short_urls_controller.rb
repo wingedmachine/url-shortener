@@ -4,7 +4,8 @@ class ShortUrlsController < ApplicationController
   end
 
   def create
-    if @short_url = ShortUrl.create(url: short_url_params[:url])
+    @short_url = ShortUrl.create(url: short_url_params[:url])
+    if @short_url.save
       flash[:shrink_amount] = "Your #{@short_url.url.length} character url has "\
         "been shrunk down to be only #{@short_url.short.length} characters!"
       flash[:short_url] = "#{request.base_url}/#{@short_url.short}"

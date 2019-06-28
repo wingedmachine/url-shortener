@@ -7,8 +7,10 @@ class ShortUrl < ApplicationRecord
     if attributes
       @url = attributes[:url]
       self.sanitize_url
-      self.ensure_protocol_presence
-      attributes[:url] = @url
+      if @url
+        self.ensure_protocol_presence
+        attributes[:url] = @url
+      end
     end
     super(attributes)
   end
