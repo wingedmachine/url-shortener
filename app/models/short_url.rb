@@ -4,10 +4,12 @@ class ShortUrl < ApplicationRecord
   end
 
   def initialize(attributes = {})
-    @url = attributes[:url]
-    self.sanitize_url
-    self.ensure_protocol_presence
-    attributes[:url] = @url
+    if attributes
+      @url = attributes[:url]
+      self.sanitize_url
+      self.ensure_protocol_presence
+      attributes[:url] = @url
+    end
     super(attributes)
   end
 
