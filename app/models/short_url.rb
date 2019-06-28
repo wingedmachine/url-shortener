@@ -1,6 +1,10 @@
 class ShortUrl < ApplicationRecord
   # This character set contains no vowels so that no words will be generated, 
   # preventing the shortened url from being something like /fuck
+
+  # The choice of 37 is arbitrary, but specifying a seed means that the shuffle 
+  # will always give the same result. If the seed is changed, all previously 
+  # shortened urls will stop working.
   SHORT_URL_CHARS = "0123456789bcdfghjklmnpqrstvwxzBCDFGHJKLMNPQRSTVWXZ".chars.shuffle(random: Random.new(37))
   CHECKSUM_LEN = 2
 
