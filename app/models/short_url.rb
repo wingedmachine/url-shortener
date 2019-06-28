@@ -1,4 +1,32 @@
 class ShortUrl < ApplicationRecord
+  validates_each :url do |record, attr, value| 
+    record.errors.add(attr, "must begin with http:// or https://") unless value.starts_with?("http://", "https://")
+  end
+
+  def initialize(attributes = {})
+    @url = attributes[:url]
+    self.sanitize_url
+    self.ensure_protocol_presence
+    attributes[:url] = @url
+    super(attributes)
+  end
+
+  # For a real commercial product, I would do much more extensive testing of 
+  # this to avoid XSS, but that gets complicated quickly. This implementation 
+  # will suffice for our purposes.
+  # (see: https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet)
+  def sanitize_url
+    anchor_start = "<a href=\""
+    anchor_end = "\">.</a>"
+
+    anchor = ActionController::Base.helpers.sanitize("#{anchor_start}#{@url}#{anchor_end}")
+    @url = anchor[anchor_start.length .. -(anchor_end.length + 1)]
+  end
+
+  def ensure_protocol_presence
+    @url = @url.prepend("http://") unless @url.starts_with?("http://", "https://")
+  end
+
   # This character set contains no vowels so that no words will be generated, 
   # preventing the shortened url from being something like /fuck
 
@@ -28,18 +56,22 @@ class ShortUrl < ApplicationRecord
   end
 
   def self.lengthen(short_url)
-    return false unless self.validate(short_url)
+    return false unless self.validate_simply(short_url)
 
     url_id = self.decode(short_url[0..(-CHECKSUM_LEN-1)])
     url = self.find_by(id: url_id)&.url
     
     return false unless url
 
-    self.calc_simple_checksum(url) == short_url[-CHECKSUM_LEN..-1] ? url : false
+    self.validate_with_checksum(url, short_url) ? url : false
   end
 
-  def self.validate(short_url)
+  def self.validate_simply(short_url)
     short_url.size >= 1 + CHECKSUM_LEN && !short_url.chars.detect { |c| !SHORT_URL_CHARS.include?(c) }
+  end
+
+  def self.validate_with_checksum(url, short_url)
+    self.calc_simple_checksum(url) == short_url[-CHECKSUM_LEN..-1]
   end
 
   def self.decode(s)
