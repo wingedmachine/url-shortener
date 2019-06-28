@@ -1,3 +1,15 @@
+<% if flash[:short_url] %>
+  <div class="short_url"><%= flash[:short_url] %></div>
+<% end %>
+
+<% if flash[:shrink_amount] %>
+  <div class="shrink_amount"><%= flash[:shrink_amount] %></div>
+<% end %>
+
+<% if flash.alert %>
+  <div class="error"><%= flash.alert %></div>
+<% end %>
+
 <%= form_for @short_url do |f| %>
   <%= f.text_field :url %>
   <%= f.submit "Shrink it!" %>
