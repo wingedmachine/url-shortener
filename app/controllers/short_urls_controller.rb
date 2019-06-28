@@ -7,7 +7,7 @@ class ShortUrlsController < ApplicationController
     if @short_url = ShortUrl.create(url: short_url_params[:url])
       flash[:shrink_amount] = "Your #{@short_url.url.length} character url has "\
         "been shrunk down to be only #{@short_url.short.length} characters!"
-      flash[:short_url] = "http://localhost:3000/#{@short_url.short}"
+      flash[:short_url] = "#{request.base_url}/#{@short_url.short}"
     else
       flash.alert = @short_url.errors.full_messages.to_sentence
     end
