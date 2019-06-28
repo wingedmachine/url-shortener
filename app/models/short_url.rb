@@ -4,11 +4,12 @@ class ShortUrl < ApplicationRecord
   SHORT_URL_CHARS = "0123456789bcdfghjklmnpqrstvwxzBCDFGHJKLMNPQRSTVWXZ".chars.shuffle(random: Random.new(37))
   CHECKSUM_LEN = 2
 
-  def self.shorten(url_id)
-    # There's no check here to see if a url already has a short version. This
-    # was a conscious trade-off of decreased efficiency for increased user privacy
-    short_url = self.encode(url_id)
-    short_url << self.calc_simple_checksum(self.find_by(id: url_id).url)
+  def short
+    # There's no check here to see if a url already has a short version. Storage is cheap, and while 
+    # I can't imagine what harm could come of it, there's no sense in freely telling anyone who asks 
+    # whether a site has already been given a shortened url.
+    short_url = self.class.encode(self.id)
+    short_url << self.class.calc_simple_checksum(self.url)
   end
 
   def self.encode(n)

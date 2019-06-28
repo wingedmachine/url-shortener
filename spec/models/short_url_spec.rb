@@ -28,11 +28,11 @@ RSpec.describe ShortUrl do
   end
 
   it "shortens" do
-    expect(ShortUrl.shorten(@source.id)).to eq(ShortUrl.encode(@source.id) + ShortUrl.calc_simple_checksum(@source.url))
+    expect(@source.short).to eq(ShortUrl.encode(@source.id) + ShortUrl.calc_simple_checksum(@source.url))
   end
 
   it "lengthens" do
-    expect(ShortUrl.lengthen(ShortUrl.shorten(@source.id))).to eq(@source.url)
+    expect(ShortUrl.lengthen(@source.short)).to eq(@source.url)
   end
 
   it "returns false when attempting to lengthen an invalid short url" do
