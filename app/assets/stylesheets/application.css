@@ -1,0 +1,23 @@
+html {
+  padding: 10px;
+  font-family: "Verdana", sans-serif;
+}
+
+.short_url {
+  font-weight: bold;
+  font-size: 120%;
+}
+
+.shrink_amount {
+  color: gray;
+  font-size: 80%;
+}
+
+.error {
+  color: red;
+  font-weight: bold;
+}
+
+.new_short_url {
+  padding: 20px;
+}
